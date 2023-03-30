@@ -3,6 +3,8 @@ from comtypes import CLSCTX_ALL
 import time
 from pycaw.pycaw import AudioUtilities,IAudioEndpointVolume
 import keyboard
+import wave
+import pyaudio
 
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(IAudioEndpointVolume._iid_,CLSCTX_ALL,None)
@@ -21,14 +23,64 @@ mic_volume = cast(mic_interface,POINTER(IAudioEndpointVolume))
 
 
 
+
+
+
+# Open the WAV file
+def play_muted():
+    with wave.open("wavs\mic_muted.wav", "rb") as wav_file:
+        # Initialize the PyAudio object
+        py_audio = pyaudio.PyAudio()
+
+        # Open the audio stream
+        stream = py_audio.open(format=py_audio.get_format_from_width(wav_file.getsampwidth()),
+                                channels=wav_file.getnchannels(),
+                                rate=wav_file.getframerate(),
+                                output=True)
+
+        # Play the audio data
+        data = wav_file.readframes(1024)
+        while data:
+            stream.write(data)
+            data = wav_file.readframes(1024)
+
+        # Close the audio stream and PyAudio object
+        stream.stop_stream()
+        stream.close()
+        py_audio.terminate()
+
+def play_unmuted():
+    with wave.open("wavs\mic_activated.wav", "rb") as wav_file:
+    # Initialize the PyAudio object
+        py_audio = pyaudio.PyAudio()
+
+        # Open the audio stream
+        stream = py_audio.open(format=py_audio.get_format_from_width(wav_file.getsampwidth()),
+                                channels=wav_file.getnchannels(),
+                                rate=wav_file.getframerate(),
+                                output=True)
+
+        # Play the audio data
+        data = wav_file.readframes(1024)
+        while data:
+            stream.write(data)
+            data = wav_file.readframes(1024)
+
+        # Close the audio stream and PyAudio object
+        stream.stop_stream()
+        stream.close()
+        py_audio.terminate()
+
 # Mute the microphone ,1 = MUTE , 0 = Unmute mic
 def toggle_mic(is_muted):
     if(is_muted):
-        print("UnMuted")
         mic_volume.SetMute(0, None)
+        print("UnMuted")
+        play_unmuted()
     else:
-        print("Muted")
         mic_volume.SetMute(1, None)
+        print("Muted")
+        play_muted()
     return  not is_muted
 
 def set_IS_muted():
@@ -36,10 +88,6 @@ def set_IS_muted():
     if value ==0:
         return False
     return True
-
-
- 
-
 
 is_muted = set_IS_muted()
 MAX_VOL = 0 # högsta
