@@ -97,18 +97,18 @@ is_muted = set_IS_muted()
 MAX_VOL = 0 # högsta
 MIN_VOL = -65 #
 CURRENT_VOLUME = int(volume.GetMasterVolumeLevel())
-print("Key binds\nUn/mute MIC:[Alt Gr]+[p]\nInCREASE VOLUME: [Alt Gr]+[i]\nDECREASE VOLUME: [Alt Gr]+[o]")
+print("Key binds\nUn/mute MIC:[Alt Gr]+[å]\nInCREASE VOLUME: [Alt Gr]+[ö]\nDECREASE VOLUME: [Alt Gr]+[ä]")
 while(True):
     # Mic
     time.sleep(0.01)
-    if(keyboard.is_pressed("Alt Gr+p")):
+    if(keyboard.is_pressed("Alt Gr+å")):
         try:
             is_muted = toggle_mic(is_muted)
             time.sleep(1)
         except Exception as e:
             print(e)
     #InCREASE VOLUME
-    if(keyboard.is_pressed("Alt Gr+i")):
+    if(keyboard.is_pressed("Alt Gr+ö")):
         if CURRENT_VOLUME < MAX_VOL:
             try:
                 time.sleep(0.01)
@@ -117,7 +117,7 @@ while(True):
             except Exception as e:
                 print(e)
      #DECREASE VOLUME
-    if(keyboard.is_pressed("Alt Gr+o")):
+    if(keyboard.is_pressed("Alt Gr+ä")):
         if CURRENT_VOLUME >MIN_VOL:
             try:
                 time.sleep(0.01)
